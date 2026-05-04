@@ -1,0 +1,97 @@
+# Saju Matching — robots.txt
+# AI/검색 크롤러 정책 (GEO/AEO 최적화)
+
+# -----------------------------------------------------------------------------
+# AI SEARCH CRAWLERS (Allow — AI 답변 생성을 위해)
+# -----------------------------------------------------------------------------
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+# -----------------------------------------------------------------------------
+# AI TRAINING CRAWLERS (Allow — 학습 데이터셋 포함 허용)
+# -----------------------------------------------------------------------------
+User-agent: GPTBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: YouBot
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: mistralai-user
+Allow: /
+
+# -----------------------------------------------------------------------------
+# KOREAN SEARCH ENGINES
+# -----------------------------------------------------------------------------
+User-agent: Yeti
+Allow: /
+
+User-agent: Daumoa
+Allow: /
+
+# -----------------------------------------------------------------------------
+# GENERAL (모든 크롤러 기본 허용, 내부 경로만 차단)
+# -----------------------------------------------------------------------------
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /auth/
+
+Sitemap: https://saju.sedaily.ai/sitemap.xml
+
+# AEO/GEO anchor — AI crawlers can parse this summary directly
+# https://saju.sedaily.ai/llms.txt

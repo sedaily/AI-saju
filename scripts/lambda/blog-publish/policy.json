@@ -1,0 +1,26 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": ["logs:CreateLogGroup","logs:CreateLogStream","logs:PutLogEvents"],
+      "Resource": "arn:aws:logs:*:*:*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": ["s3:GetObject","s3:PutObject"],
+      "Resource": [
+        "arn:aws:s3:::sedaily-mbti-frontend-dev/blog-content/*",
+        "arn:aws:s3:::saju-oracle-frontend-887078546492/blog-content/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Action": "cloudfront:CreateInvalidation",
+      "Resource": [
+        "arn:aws:cloudfront::887078546492:distribution/E1QS7PY350VHF6",
+        "arn:aws:cloudfront::887078546492:distribution/E2ZDGPQU5JXQKC"
+      ]
+    }
+  ]
+}

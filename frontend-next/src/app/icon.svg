@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="7" fill="#0f172a"/>
+  <!-- 사주 = 四柱 — 4 pillars: 年 月 日 時. 3rd (일간) 강조 -->
+  <rect x="5.5" y="10" width="3" height="12" rx="1.5" fill="#fff" opacity="0.55"/>
+  <rect x="11" y="8" width="3" height="16" rx="1.5" fill="#fff" opacity="0.8"/>
+  <rect x="16.5" y="6" width="3" height="20" rx="1.5" fill="#fff"/>
+  <rect x="22" y="10" width="3" height="12" rx="1.5" fill="#fff" opacity="0.55"/>
+</svg>

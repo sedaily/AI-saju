@@ -1,0 +1,344 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Tailwind v4: class 기반 다크모드 활성화 — <html class="dark"> 적용 시 dark: prefix 작동 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-2: #f8f9fa;
+  --color-text: #000000;
+  --color-text-muted: #6b7280;
+  --color-primary: #2563eb;
+  --color-border: #e5e7eb;
+  --max-container: 1080px;
+  --gutter: 20px;
+  /* V3 디자인 토큰 — 라이트 기본값 (다크모드에서 .dark 에서 오버라이드) */
+  --v3-ink: #191F28;
+  --v3-sub: #6B7684;
+  --v3-line: #E5E8EB;
+  --v3-panel: #F9FAFB;
+  --v3-subtle: #8B95A1;
+  --v3-hairline: #F2F4F7;
+  /* 강조 박스 (오늘의 흐름 등) — 블루 톤 */
+  --accent-blue-bg: #EFF4FF;
+  --accent-blue-border: #3B82F6;
+  --accent-blue-title: #3B82F6;
+  --accent-blue-body: #1E3A8A;
+  /* 톤 배지 (오늘 플러스/참고/주의/중립) */
+  --tone-positive-bg: #E8F5E5;
+  --tone-positive-fg: #2D7A1F;
+  --tone-caution-bg: #FEF3C7;
+  --tone-caution-fg: #92400E;
+  --tone-negative-bg: #FEE7E2;
+  --tone-negative-fg: #C33A1F;
+  --tone-neutral-bg: #F3F4F6;
+  --tone-neutral-fg: #4E5968;
+  --tone-info-bg: #E8F2FF;
+  --tone-info-fg: #3182F6;
+  /* 오행 파스텔 팔레트 — 용신 박스 등 */
+  --oh-mok-bg: #E8F5E5;
+  --oh-mok-text: #2D7A1F;
+  --oh-mok-border: #BFE3B3;
+  --oh-hwa-bg: #FEE7E2;
+  --oh-hwa-text: #C33A1F;
+  --oh-hwa-border: #F8C4B8;
+  --oh-to-bg: #FBF1D6;
+  --oh-to-text: #8A6A1F;
+  --oh-to-border: #EFDCA7;
+  --oh-geum-bg: #F2F4F7;
+  --oh-geum-text: #4E5968;
+  --oh-geum-border: #D7DBE1;
+  --oh-su-bg: #E8F2FF;
+  --oh-su-text: #3182F6;
+  --oh-su-border: #BFD8FD;
+  /* 편재 (적극형·amber) · 정재 (안정형·teal) */
+  --chae-pyeon: #B45309;
+  --chae-jeong: #0F766E;
+  /* 체질 × 시기 브릿지 (오렌지) */
+  --accent-orange-bg: #FFF7ED;
+  --accent-orange-border: #F97316;
+  --accent-orange-text: #9A3412;
+  /* 시기별 흐름 카드 (올해·이번달·오늘) — 점진 강조 */
+  --period-row-1-bg: #F8FAFC;
+  --period-row-1-border: #E2E8F0;
+  --period-row-2-bg: #F1F5F9;
+  --period-row-2-border: #CBD5E1;
+  --period-row-3-bg: #FFFFFF;
+  --period-row-3-border: #0F172A;
+  /* 강약 pane (대운·시기 해석 공용) */
+  --pane-good-bg: #ECFDF5;
+  --pane-good-border: #A7F3D0;
+  --pane-good-text: #065F46;
+  --pane-good-sub: #047857;
+  --pane-neutral-bg: #F8FAFC;
+  --pane-neutral-border: #E2E8F0;
+  --pane-neutral-text: #334155;
+  --pane-neutral-sub: #64748B;
+  --pane-caution-bg: #FFF1F2;
+  --pane-caution-border: #FECDD3;
+  --pane-caution-text: #9F1239;
+  --pane-caution-sub: #BE123C;
+}
+
+.dark {
+  --color-bg: #0b0f14;
+  --color-surface: #0f172a;
+  --color-surface-2: #111827;
+  --color-text: #e5e7eb;
+  --color-text-muted: #9ca3af;
+  --color-primary: #60a5fa;
+  --color-border: #1f2937;
+  /* V3 토큰 다크 오버라이드 */
+  --v3-ink: #FFFFFF;
+  --v3-sub: #D1D5DB;
+  --v3-line: #1F2937;
+  --v3-panel: #111827;
+  --v3-subtle: #9CA3AF;
+  --v3-hairline: #1F2937;
+  /* 강조 박스 다크 오버라이드 — 배경은 진한 네이비, 텍스트는 밝은 블루 */
+  --accent-blue-bg: rgba(59, 130, 246, 0.12);
+  --accent-blue-border: #60A5FA;
+  --accent-blue-title: #93C5FD;
+  --accent-blue-body: #DBEAFE;
+  /* 톤 배지 다크 오버라이드 — 배경 반투명, 텍스트 밝게 */
+  --tone-positive-bg: rgba(34, 197, 94, 0.15);
+  --tone-positive-fg: #86EFAC;
+  --tone-caution-bg: rgba(245, 158, 11, 0.15);
+  --tone-caution-fg: #FCD34D;
+  --tone-negative-bg: rgba(239, 68, 68, 0.15);
+  --tone-negative-fg: #FCA5A5;
+  --tone-neutral-bg: rgba(148, 163, 184, 0.15);
+  --tone-neutral-fg: #E2E8F0;
+  --tone-info-bg: rgba(59, 130, 246, 0.15);
+  --tone-info-fg: #93C5FD;
+  /* 오행 파스텔 다크 오버라이드 — 반투명 bg + 밝은 텍스트 */
+  --oh-mok-bg: rgba(34, 197, 94, 0.15);
+  --oh-mok-text: #86EFAC;
+  --oh-mok-border: rgba(34, 197, 94, 0.35);
+  --oh-hwa-bg: rgba(239, 68, 68, 0.15);
+  --oh-hwa-text: #FCA5A5;
+  --oh-hwa-border: rgba(239, 68, 68, 0.35);
+  --oh-to-bg: rgba(245, 158, 11, 0.15);
+  --oh-to-text: #FCD34D;
+  --oh-to-border: rgba(245, 158, 11, 0.35);
+  --oh-geum-bg: rgba(148, 163, 184, 0.15);
+  --oh-geum-text: #E2E8F0;
+  --oh-geum-border: rgba(148, 163, 184, 0.35);
+  --oh-su-bg: rgba(59, 130, 246, 0.15);
+  --oh-su-text: #93C5FD;
+  --oh-su-border: rgba(59, 130, 246, 0.35);
+  /* 편재·정재 다크 오버라이드 — 더 밝은 amber·teal */
+  --chae-pyeon: #FBBF24;
+  --chae-jeong: #5EEAD4;
+  /* 브릿지 오렌지 다크 — 반투명 bg + 밝은 주황 텍스트 */
+  --accent-orange-bg: rgba(249, 115, 22, 0.15);
+  --accent-orange-border: #FB923C;
+  --accent-orange-text: #FDBA74;
+  /* 시기 카드 다크 오버라이드 */
+  --period-row-1-bg: #111827;
+  --period-row-1-border: #1F2937;
+  --period-row-2-bg: #1F2937;
+  --period-row-2-border: #374151;
+  --period-row-3-bg: #0F172A;
+  --period-row-3-border: #60A5FA;
+  /* pane 다크 오버라이드 */
+  --pane-good-bg: rgba(34, 197, 94, 0.12);
+  --pane-good-border: rgba(34, 197, 94, 0.4);
+  --pane-good-text: #86EFAC;
+  --pane-good-sub: #4ADE80;
+  --pane-neutral-bg: #111827;
+  --pane-neutral-border: #1F2937;
+  --pane-neutral-text: #E5E7EB;
+  --pane-neutral-sub: #9CA3AF;
+  --pane-caution-bg: rgba(239, 68, 68, 0.12);
+  --pane-caution-border: rgba(239, 68, 68, 0.4);
+  --pane-caution-text: #FCA5A5;
+  --pane-caution-sub: #F87171;
+  /* 네이티브 폼 컨트롤(체크박스·라디오·스크롤바 등) 다크 톤 자동 적용 */
+  color-scheme: dark;
+}
+
+html, body {
+  color-scheme: light;
+}
+
+.dark, .dark body {
+  color-scheme: dark;
+}
+
+/* 다크모드 전용 체크박스 — 언체크/체크 모두 다크 톤 */
+.dark input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: #111827; /* gray-900 */
+  border: 1.5px solid #4b5563; /* gray-600 */
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+.dark input[type="checkbox"]:hover {
+  border-color: #9ca3af; /* gray-400 */
+}
+.dark input[type="checkbox"]:checked {
+  background-color: #e5e7eb; /* gray-200 */
+  border-color: #e5e7eb;
+}
+.dark input[type="checkbox"]:checked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 4px;
+  height: 8px;
+  border: solid #111827;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --color-primary: #ffffff;
+  --color-accent: #60a5fa;
+  --font-sans: 'Pretendard Variable', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-serif: 'Merriweather', Georgia, 'Times New Roman', serif;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --spacing-gutter: min(32px, 5vw);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Pretendard Variable', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-y: scroll;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.max-w-container {
+  max-width: var(--max-container);
+}
+
+.px-gutter {
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #000;
+  color: #fff;
+  padding: 8px 16px;
+  z-index: 100;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+.no-hover:hover {
+  text-decoration: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─ 블로그 본문 스타일 — /blog 상세 + /blog/admin 에디터 공용 ─ */
+.blog-body h1,
+.blog-body h2 {
+  margin: 1.5rem 0 0.75rem;
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+.dark .blog-body h1,
+.dark .blog-body h2 { color: #F3F4F6; }
+.blog-body h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111827;
+}
+.dark .blog-body h3 { color: #F3F4F6; }
+.blog-body p {
+  margin: 0.75rem 0;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #374151;
+}
+.dark .blog-body p { color: #E5E7EB; }
+.blog-body strong { font-weight: 700; color: #111827; }
+.dark .blog-body strong { color: #F3F4F6; }
+.blog-body em { font-style: italic; }
+.blog-body ul,
+.blog-body ol {
+  margin: 0.75rem 0;
+  padding-left: 1.5rem;
+  font-size: 15px;
+  line-height: 1.8;
+  color: #374151;
+}
+.dark .blog-body ul,
+.dark .blog-body ol { color: #E5E7EB; }
+.blog-body ul { list-style: disc; }
+.blog-body ol { list-style: decimal; }
+.blog-body li { margin: 0.25rem 0; }
+.blog-body blockquote {
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  border-left: 3px solid #D1D5DB;
+  color: #4B5563;
+  font-style: italic;
+}
+.dark .blog-body blockquote {
+  border-left-color: #4B5563;
+  color: #9CA3AF;
+}
+.blog-body hr {
+  margin: 1.5rem 0;
+  border: 0;
+  border-top: 1px solid #E5E7EB;
+}
+.dark .blog-body hr { border-top-color: #374151; }
+.blog-body a { color: #2563EB; text-decoration: underline; }
+.dark .blog-body a { color: #60A5FA; }
+
+.admin-editor:empty::before {
+  content: attr(data-placeholder);
+  color: #9CA3AF;
+}
+.admin-editor:focus { outline: none; }
+
+/* 모바일(<=640px)에서 자잘한 텍스트 한 단계 상향 — 가독성 개선 */
+@media (max-width: 640px) {
+  .text-\[10px\] { font-size: 11px; }
+  .text-\[10\.5px\] { font-size: 11.5px; }
+  .text-\[11px\] { font-size: 12px; }
+  .text-\[11\.5px\] { font-size: 12.5px; }
+  .text-\[12px\] { font-size: 13px; }
+  .text-\[12\.5px\] { font-size: 13.5px; }
+  .text-\[13px\] { font-size: 14px; }
+}

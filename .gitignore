@@ -1,0 +1,32 @@
+node_modules/
+dist/
+.next/
+.env
+.env.local
+.DS_Store
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Lambda build artifacts
+*.zip
+lambda.zip
+lambda_package.zip
+*-build/
+lambda-build/
+saju-build/
+
+# Frontend build output
+frontend/out/
+
+# Vite cache
+.vite/
+
+# Claude Code
+.claude/
+scripts/lambda/blog-publish/fn.zip

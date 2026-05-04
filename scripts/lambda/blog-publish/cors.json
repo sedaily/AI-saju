@@ -1,0 +1,6 @@
+{
+  "AllowOrigins": ["https://saju.sedaily.ai", "https://mbti.sedaily.ai", "http://localhost:3000"],
+  "AllowMethods": ["*"],
+  "AllowHeaders": ["content-type"],
+  "MaxAge": 300
+}
