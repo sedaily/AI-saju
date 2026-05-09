@@ -53,7 +53,12 @@ function countHits(text: string, keywords: string[]): number {
   return n;
 }
 
-export function TopicNewsSection({
+export function TopicNewsSection(_props: Props) {
+  // 뉴스 검색 API 회귀로 임시 숨김 (WealthNewsSection 참조)
+  return null;
+}
+
+function TopicNewsSectionImpl({
   title,
   subtitle,
   categories,

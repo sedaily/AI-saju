@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { lunarToSolar } from '@fullstackfamily/manseryeok';
 import { trackEvent } from '@/shared/lib/trackEvent';
 import { ThemeToggle } from '@/shared/lib/ThemeToggle';
 import { LangToggle } from '@/shared/lib/LangToggle';
@@ -51,12 +52,14 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
   const [birthdate, setBirthdate] = useState('');
   const [timeInput, setTimeInput] = useState('');
   const [noTime, setNoTime] = useState(false);
-  const [gender, setGender] = useState<'남' | '여' | ''>('');
+  const [gender, setGender] = useState<'남' | '여' | ''>('남');
   const mbtiGroup = selectedGroup ?? 'NF';
   const setMbtiGroup = useCallback((g: 'NT' | 'NF' | 'ST' | 'SF') => {
     if (onMbtiChange) onMbtiChange(g);
   }, [onMbtiChange]);
   const [region, setRegion] = useState('');
+  const [calendar, setCalendar] = useState<'solar' | 'lunar'>('solar');
+  const [isLeapMonth, setIsLeapMonth] = useState(false);
   const [result, setResult] = useState<SajuData | null>(null);
   const [error, setError] = useState('');
   const [savedList, setSavedList] = useState<SavedEntry[]>([]);
@@ -168,17 +171,27 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
   const handleCalculate = useCallback(() => {
     const parsed = parseDateStr(birthdate);
     if (!parsed) { setError(t('생년월일을 정확히 입력해주세요.', 'Please enter a valid birth date.')); return; }
-    const { y, m, d } = parsed;
+    let { y, m, d } = parsed;
     if (y < 1900 || y > 2050) { setError(t('1900~2050년 범위만 지원합니다.', 'Only 1900–2050 is supported.')); return; }
+    if (calendar === 'lunar') {
+      try {
+        const solar = lunarToSolar(y, m, d, isLeapMonth).solar;
+        y = solar.year; m = solar.month; d = solar.day;
+      } catch {
+        setError(t('해당 음력 날짜가 유효하지 않습니다. 윤달 여부를 확인해 주세요.', 'Invalid lunar date. Check the leap-month option.'));
+        return;
+      }
+    }
     doCalculate(y, m, d, gender, timeInput, noTime, region);
     trackEvent('saju_calculate', {
       gender,
       has_time: !noTime,
       region_set: !!region,
       mbti_group: mbtiGroup,
+      calendar,
     });
     setShowForm(false);
-  }, [birthdate, timeInput, noTime, gender, region, parseDateStr, doCalculate, mbtiGroup, t]);
+  }, [birthdate, timeInput, noTime, gender, region, calendar, isLeapMonth, parseDateStr, doCalculate, mbtiGroup, t]);
 
   const today = new Date();
   const todayLabel = lang === 'en'
@@ -257,25 +270,44 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
           {/* 생년월일시 */}
           <div className="mb-6">
             <label className="block text-[13px] font-semibold text-gray-800 dark:text-gray-200 mb-2">{t('생년월일시', 'Date & Time of Birth')}</label>
-            <div className="flex gap-2">
+            <div className="flex items-stretch gap-2">
+              <div className="shrink-0 inline-flex border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden bg-white dark:bg-gray-900">
+                {(['solar', 'lunar'] as const).map(c => (
+                  <button key={c} type="button" onClick={() => setCalendar(c)}
+                    className={`px-3 text-[13px] font-medium transition-all ${calendar === c ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'}`}>
+                    {c === 'solar' ? t('양력', 'Solar') : t('음력', 'Lunar')}
+                  </button>
+                ))}
+              </div>
               <input type="text" inputMode="numeric" maxLength={14} placeholder="YYYY / MM / DD"
                 value={birthdate} onChange={e => handleDateInput(e.target.value)}
-                className="flex-1 px-3.5 py-3 text-[16px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-100 placeholder:text-gray-300 transition-all" />
-              <div className="relative flex-1">
+                className="flex-1 min-w-0 px-3 py-3 text-[15px] bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-100 placeholder:text-gray-300 transition-all" />
+              <div className="relative shrink-0 w-[92px]">
                 <input type="text" inputMode="numeric" maxLength={5} placeholder="HH:MM"
                   value={timeInput} onChange={e => handleTimeInput(e.target.value)}
                   disabled={noTime}
-                  className={`w-full px-3.5 py-3 text-[16px] text-center tracking-widest tabular-nums bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-100 placeholder:text-gray-300 transition-all ${noTime ? 'opacity-35' : ''}`} />
+                  className={`w-full px-2 py-3 text-[15px] text-center tracking-widest tabular-nums bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl outline-none focus:border-gray-400 focus:ring-1 focus:ring-gray-100 placeholder:text-gray-300 transition-all ${noTime ? 'opacity-35' : ''}`} />
                 {timeBadgeLabel && (
                   <div className="absolute -bottom-5 left-0 right-0 text-center text-[11px] text-gray-400 dark:text-gray-300">{timeBadgeLabel}</div>
                 )}
               </div>
             </div>
-            <label className="mt-2 inline-flex items-center gap-1.5 text-[13px] text-gray-400 dark:text-gray-300 cursor-pointer hover:text-gray-600 dark:text-gray-400 transition-colors">
-              <input type="checkbox" checked={noTime} onChange={e => { setNoTime(e.target.checked); if (e.target.checked) setTimeInput(''); }}
-                className="w-[15px] h-[15px] accent-gray-900 dark:accent-gray-200 cursor-pointer" />
-              {t('시간 모름', 'Time Unknown')}
-            </label>
+            <div className="mt-2 flex items-center justify-between gap-4 flex-wrap">
+              <div>
+                {calendar === 'lunar' && (
+                  <label className="inline-flex items-center gap-1.5 text-[13px] text-gray-400 dark:text-gray-300 cursor-pointer hover:text-gray-600 dark:text-gray-400 transition-colors">
+                    <input type="checkbox" checked={isLeapMonth} onChange={e => setIsLeapMonth(e.target.checked)}
+                      className="w-[15px] h-[15px] accent-gray-900 dark:accent-gray-200 cursor-pointer" />
+                    {t('윤달', 'Leap month')}
+                  </label>
+                )}
+              </div>
+              <label className="inline-flex items-center gap-1.5 text-[13px] text-gray-400 dark:text-gray-300 cursor-pointer hover:text-gray-600 dark:text-gray-400 transition-colors">
+                <input type="checkbox" checked={noTime} onChange={e => { setNoTime(e.target.checked); if (e.target.checked) setTimeInput(''); }}
+                  className="w-[15px] h-[15px] accent-gray-900 dark:accent-gray-200 cursor-pointer" />
+                {t('시간 모름', 'Time Unknown')}
+              </label>
+            </div>
           </div>
 
           {/* 도시 */}
@@ -708,6 +740,9 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
     if (entry.time) { setTimeInput(entry.time); setNoTime(false); }
     else { setTimeInput(''); setNoTime(true); }
     setRegion(entry.region || '');
+    // 저장된 날짜는 항상 양력 기준 — 불러올 때 토글 초기화
+    setCalendar('solar');
+    setIsLeapMonth(false);
 
     const y = parseInt(dp.slice(0, 4));
     const m = parseInt(dp.slice(4, 6));

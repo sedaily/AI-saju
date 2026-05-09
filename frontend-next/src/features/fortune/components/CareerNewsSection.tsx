@@ -175,7 +175,12 @@ function distribute(
   return result;
 }
 
-export function CareerNewsSection({ periodChaeun, careerOverall, monthSeries }: Props) {
+export function CareerNewsSection(_props: Props) {
+  // 뉴스 검색 API 회귀로 임시 숨김 (WealthNewsSection 참조)
+  return null;
+}
+
+function CareerNewsSectionImpl({ periodChaeun, careerOverall, monthSeries }: Props) {
   const periods = useMemo(
     () => buildPeriods(periodChaeun, careerOverall),
     [periodChaeun, careerOverall],

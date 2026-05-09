@@ -12,7 +12,8 @@ const TABS: { id: TabId; href: string; ko: string; en: string }[] = [
   { id: 'career',        href: '/career',        ko: '커리어',   en: 'Career'  },
   { id: 'compatibility', href: '/compatibility', ko: '이상형',   en: 'Ideal'   },
   { id: 'couple',        href: '/couple',        ko: '커플 궁합', en: 'Couple'  },
-  { id: 'news',          href: '/news',          ko: '뉴스',     en: 'News'    },
+  // 뉴스 탭: 검색 API 회귀로 임시 숨김
+  // { id: 'news',          href: '/news',          ko: '뉴스',     en: 'News'    },
   { id: 'blog',          href: '/blog',          ko: '블로그',   en: 'Blog'    },
 ];
 

@@ -195,7 +195,12 @@ function distribute(
   return result;
 }
 
-export function WealthNewsSection({ periodChaeun, chaeseong, monthSeries }: Props) {
+export function WealthNewsSection(_props: Props) {
+  // 뉴스 검색 API (sedaily-mbti-search-dev Lambda, 2026-05-06 재배포) 의 categories 필터 회귀로 임시 숨김
+  return null;
+}
+
+function WealthNewsSectionImpl({ periodChaeun, chaeseong, monthSeries }: Props) {
   const periods = useMemo(() => buildPeriods(periodChaeun), [periodChaeun]);
   const chaeOh = chaeseong?.chaeOh || '';
   const sector = SECTOR_BY_OHAENG[chaeOh] ?? DEFAULT_SECTOR;
