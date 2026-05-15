@@ -4,6 +4,7 @@ import { CG_OH, JJ_OH, OH_HJ, JJG, sipsung, unsung, buildStructureAnalysis, dete
 import { OHAENG_SETS, V3_TOKENS, type Ohaeng } from '../lib/ohaeng';
 import { SajuTable } from './SajuTable';
 import { DailyCalendar } from './DailyCalendar';
+import { useLang } from '@/shared/lib/LangContext';
 
 type MbtiGroup = 'NT' | 'NF' | 'ST' | 'SF';
 
@@ -31,6 +32,7 @@ interface Props {
   };
   mbtiGroup?: MbtiGroup;
   onMbtiChange?: (g: MbtiGroup) => void;
+  mode?: 'full' | 'today';
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
@@ -247,8 +249,9 @@ function UnCard({ title, subtitle, cols, ilgan, activeCheck, variant, yongsinOh 
   variant: UnVariant;
   yongsinOh?: string;
 }) {
+  const { t } = useLang();
   const [expandedIdx, setExpandedIdx] = useState<number | null>(null);
-  const periodName = variant === 'daeun' ? '10년' : variant === 'yeonun' ? '1년' : '1개월';
+  const periodName = variant === 'daeun' ? t('10년', '10 yrs') : variant === 'yeonun' ? t('1년', '1 yr') : t('1개월', '1 mo');
 
   // 스크린샷 규격: 대운 넓게, 연운 중간, 월운 좁게
   const tileWidth = variant === 'daeun' ? 62 : variant === 'yeonun' ? 58 : 52;
@@ -323,7 +326,7 @@ function UnCard({ title, subtitle, cols, ilgan, activeCheck, variant, yongsinOh 
                       color: yEval.rating === 'favor' ? '#2D7A1F' : '#C33A1F',
                     }}
                   >
-                    {yEval.rating === 'favor' ? '용신↑' : '용신↓'}
+                    {yEval.rating === 'favor' ? t('용신↑', 'Yong↑') : t('용신↓', 'Yong↓')}
                   </div>
                 )}
               </button>
@@ -347,7 +350,7 @@ function UnCard({ title, subtitle, cols, ilgan, activeCheck, variant, yongsinOh 
           <div className="mt-3 p-3.5 rounded-xl text-[12px] text-gray-600 dark:text-gray-100 dark:text-gray-300 leading-relaxed" style={{ background: V3_TOKENS.panel }}>
             <div className="font-semibold text-gray-800 dark:text-gray-100 mb-2">
               {col.label}
-              <span className="text-[11px] text-gray-400 dark:text-gray-300 ml-1.5">({periodName} 기간)</span>
+              <span className="text-[11px] text-gray-400 dark:text-gray-300 ml-1.5">({periodName} {t('기간', 'period')})</span>
               <span className="ml-2">
                 <span style={{ color: OHAENG_SETS.default[cgOh].text }}>{col.ck}{col.c}</span>{' '}
                 <span style={{ color: OHAENG_SETS.default[jjOh].text }}>{col.jk}{col.j}</span>
@@ -355,21 +358,21 @@ function UnCard({ title, subtitle, cols, ilgan, activeCheck, variant, yongsinOh 
             </div>
             {cgSS && (
               <p className="mb-2">
-                <span className="font-medium text-gray-700 dark:text-gray-300">천간 십성 · {cgSS}</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">{t('천간 십성', 'Heavenly Stem')} · {cgSS}</span>
                 <span className="text-[11px] text-gray-400 dark:text-gray-300 ml-1">({SS_MEANING[cgSS] || ''})</span>
                 <br />{SS_DETAIL[cgSS] || ''}
               </p>
             )}
             {us && (
               <p className="mb-2">
-                <span className="font-medium text-gray-700 dark:text-gray-300">12운성 · {us}</span>
+                <span className="font-medium text-gray-700 dark:text-gray-300">{t('12운성', '12 Stages')} · {us}</span>
                 <span className="text-[11px] text-gray-400 dark:text-gray-300 ml-1">({US_MEANING[us] || ''})</span>
                 <br />{US_DETAIL[us] || ''}
               </p>
             )}
             {hiddenItems.length > 0 && (
               <div className="border-t border-gray-200 dark:border-gray-800 pt-2 mt-2">
-                <div className="text-[11px] text-gray-500 dark:text-gray-100 dark:text-gray-300 mb-1">지지({col.j}) 속 숨은 기운:</div>
+                <div className="text-[11px] text-gray-500 dark:text-gray-100 dark:text-gray-300 mb-1">{t(`지지(${col.j}) 속 숨은 기운:`, `Hidden energies in branch (${col.j}):`)}</div>
                 <div className="flex flex-wrap gap-1">
                   {hiddenItems.map((h, i) => (
                     <span key={i} className={`text-[11px] px-1.5 py-0.5 rounded border ${h.weight === '본기' ? 'border-gray-400 dark:border-gray-600 bg-white dark:bg-gray-900 font-medium' : 'border-gray-200 dark:border-gray-800 text-gray-500 dark:text-gray-100 dark:text-gray-300'}`}>
@@ -388,7 +391,7 @@ function UnCard({ title, subtitle, cols, ilgan, activeCheck, variant, yongsinOh 
               return (
                 <div className="border-t border-gray-200 dark:border-gray-800 pt-2 mt-2">
                   <span className={y.rating === 'favor' ? 'text-green-600 font-semibold' : 'text-red-500 font-semibold'}>
-                    {y.rating === 'favor' ? '✓ 용신 작용' : '! 기신 작용'}
+                    {y.rating === 'favor' ? t('✓ 용신 작용', '✓ Yongsin active') : t('! 기신 작용', '! Adverse active')}
                   </span>
                   <span className="text-gray-500 dark:text-gray-100 dark:text-gray-300 ml-1.5">{y.reason}</span>
                 </div>
@@ -401,7 +404,8 @@ function UnCard({ title, subtitle, cols, ilgan, activeCheck, variant, yongsinOh 
   );
 }
 
-export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
+export function FortuneResult({ data, mbtiGroup, onMbtiChange, mode = 'full' }: Props) {
+  const { t, lang } = useLang();
   const { pillars, ilgan, year, month, day, gender, chongun, todayFortune, daeuns, yeonuns, woluns, correctedTime } = data;
   const oh = CG_OH[ilgan] || '';
   const now = new Date();
@@ -447,6 +451,12 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
     categoryNoteMap[n.category].push({ note: n.note, tone: n.tone });
   }
 
+  const CATEGORY_LABEL_EN: Record<string, string> = {
+    '재물운': 'Wealth', '건강운': 'Health', '연애운': 'Love',
+    '직장운': 'Career', '학업운': 'Study',
+  };
+  const catLabel = (ko: string) => lang === 'en' ? (CATEGORY_LABEL_EN[ko] || ko) : ko;
+
   const chongunText = mbtiGroup && chongunCache?.[mbtiGroup] ? chongunCache[mbtiGroup] : null;
   const ssReadingText = mbtiGroup && todayParts?.ss?.[mbtiGroup]?.[todayFortune?.ss || ''] || todayFortune?.ssReading || '';
   const usReadingText = mbtiGroup && todayParts?.us?.[mbtiGroup]?.[todayFortune?.us || ''] || todayFortune?.usReading || '';
@@ -483,7 +493,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
         <div className="flex gap-4">
           <div className="flex-1 min-w-0">
             <div style={{ fontSize: 11, color: V3_TOKENS.sub, fontWeight: 600, marginBottom: 6 }}>
-              일간
+              {t('일간', 'Day Master')}
             </div>
             <div className="flex items-baseline gap-1.5">
               <span style={{ fontSize: 18, fontWeight: 800, color: OHAENG_SETS.default[ilganOh].text }}>
@@ -506,7 +516,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
           <div style={{ width: 1, background: '#F2F4F7' }} />
           <div className="flex-1 min-w-0">
             <div style={{ fontSize: 11, color: V3_TOKENS.sub, fontWeight: 600, marginBottom: 6 }}>
-              {correctedTime ? '진태양시' : '양력 출생'}
+              {correctedTime ? t('진태양시', 'True Solar Time') : t('양력 출생', 'Solar Birth')}
             </div>
             <div style={{ fontSize: 16, fontWeight: 700, color: V3_TOKENS.ink, letterSpacing: '0.02em' }}>
               {correctedTime
@@ -515,7 +525,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
             </div>
             {correctedTime && (
               <div style={{ fontSize: 10, color: V3_TOKENS.sub, marginTop: 2 }}>
-                경도 보정 적용
+                {t('경도 보정 적용', 'Longitude correction applied')}
               </div>
             )}
           </div>
@@ -526,14 +536,14 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
       {onMbtiChange && (
         <div className="mb-4 flex items-center justify-between gap-2 flex-wrap">
           <div className="text-[12px] text-gray-600 dark:text-gray-300 font-medium">
-            타입에 맞게 풀이해드립니다!
+            {t('타입에 맞게 풀이해드립니다!', 'Interpreted for your type!')}
           </div>
           <div className="flex gap-1">
             {([
-              { id: 'NT' as const, name: '분석' },
-              { id: 'NF' as const, name: '이야기' },
-              { id: 'ST' as const, name: '실용' },
-              { id: 'SF' as const, name: '다정' },
+              { id: 'NT' as const, ko: '분석', en: 'Analytic' },
+              { id: 'NF' as const, ko: '이야기', en: 'Narrative' },
+              { id: 'ST' as const, ko: '실용', en: 'Practical' },
+              { id: 'SF' as const, ko: '다정', en: 'Warm' },
             ]).map((g) => (
               <button
                 key={g.id}
@@ -545,7 +555,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
                 }`}
               >
-                {g.name}
+                {t(g.ko, g.en)}
               </button>
             ))}
           </div>
@@ -611,9 +621,9 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
             </div>
             <div className="grid grid-cols-3 gap-2">
               {[
-                { k: '일진', v: todayFortune.dayPillar },
-                { k: '십성', v: todayFortune.ss },
-                { k: '운성', v: todayFortune.us },
+                { k: t('일진', 'Day Pillar'), v: todayFortune.dayPillar },
+                { k: t('십성', 'Ten God'), v: todayFortune.ss },
+                { k: t('운성', 'Stage'), v: todayFortune.us },
               ].map((x, i) => (
                 <div
                   key={i}
@@ -632,17 +642,10 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
 
       {/* [섹션 1] 오늘의 운세 — 설명 */}
       {todayFortune && (
-        <Section title="오늘의 운세">
-          <p className="mb-3">
-            오늘은 <strong className={EL_COLORS[todayFortune.dayOh]}>{todayFortune.dayPillar}({todayFortune.dayPillarHanja})</strong>일입니다.
-            나의 일간 기준 <strong>{todayFortune.ss}</strong>
-            <span className="text-[11px] text-gray-400 dark:text-gray-300">({SS_MEANING[todayFortune.ss]})</span>의 날이며,
-            12운성은 <strong>{todayFortune.us}</strong>
-            <span className="text-[11px] text-gray-400 dark:text-gray-300">({US_MEANING[todayFortune.us]})</span>입니다.
-          </p>
+        <Section title={t('오늘의 운세', "Today's Fortune")}>
           {ssReadingText && <p className="mb-3">{ssReadingText}</p>}
-          <p className={todayFortune.sinsal.length ? 'mb-3' : ''}>
-            12운성 <strong>{todayFortune.us}</strong>
+          <p className={todayFortune.sinsal.length || dailyInsights.complements.length || dayHapChung.length ? 'mb-3' : ''}>
+            {t('12운성', '12 Stages')} <strong>{todayFortune.us}</strong>
             <span className="text-[11px] text-gray-400 dark:text-gray-300 ml-1">— {US_MEANING[todayFortune.us]}</span>
             <br />{usReadingText}
           </p>
@@ -650,7 +653,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
           {/* 원국 결핍 오행 ↔ 오늘 일진 지장간 보충 분석 */}
           {dailyInsights.complements.length > 0 && (
             <div className="border-t border-gray-100 dark:border-gray-800 pt-3 mb-3">
-              <div className="text-[11px] font-semibold text-gray-600 dark:text-gray-100 dark:text-gray-300 mb-1.5">원국 부족 기운 보충</div>
+              <div className="text-[11px] font-semibold text-gray-600 dark:text-gray-100 dark:text-gray-300 mb-1.5">{t('원국 부족 기운 보충', 'Supplement for Lacking Elements')}</div>
               <div className="space-y-1.5">
                 {dailyInsights.complements.map((c, i) => (
                   <div key={i} className="flex items-start gap-2 text-[12px]">
@@ -667,7 +670,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
           {/* 일진 ↔ 원국 합충: 오늘 기운과 내 사주의 상호작용 */}
           {dayHapChung.length > 0 && (
             <div className="border-t border-gray-100 dark:border-gray-800 pt-3 mb-3">
-              <div className="text-[11px] font-semibold text-gray-600 dark:text-gray-100 dark:text-gray-300 mb-1.5">오늘 기운과 내 사주의 만남</div>
+              <div className="text-[11px] font-semibold text-gray-600 dark:text-gray-100 dark:text-gray-300 mb-1.5">{t('오늘 기운과 내 사주의 만남', "Today's Energy Meets Your Chart")}</div>
               <div className="space-y-2">
                 {dayHapChung.map((hc, i) => {
                   const boxCls = hc.good === true
@@ -714,9 +717,9 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
       )}
 
       {/* [섹션 2] 지지 속 숨은 기운 */}
-      {todayFortune && todayFortune.hiddenSipsung && todayFortune.hiddenSipsung.length > 0 && (
+      {mode === 'full' && todayFortune && todayFortune.hiddenSipsung && todayFortune.hiddenSipsung.length > 0 && (
         <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 mb-4">
-          <h3 className="text-[14px] font-bold text-gray-900 dark:text-gray-100">지지 속 숨은 기운</h3>
+          <h3 className="text-[14px] font-bold text-gray-900 dark:text-gray-100">{t('지지 속 숨은 기운', 'Hidden Energies in Earthly Branch')}</h3>
           <div className="text-[11px] text-gray-400 dark:text-gray-300 mt-0.5 mb-4">
             지지 {todayFortune.dayPillarHanja[1]} · 지장간
           </div>
@@ -750,7 +753,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
 
       {/* [섹션 3] 분야별 운세 */}
       {todayFortune && todayFortune.categories && todayFortune.categories.length > 0 && (
-        <Section title="분야별 운세">
+        <Section title={t('분야별 운세', 'Fortune by Category')}>
           {/* 십성 → 주 영역 테마 요약 (정인일 = 학업 등 맥락 연결) */}
           {(() => {
             const domain = SS_DOMAIN_MAP[todayFortune.ss];
@@ -765,7 +768,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
                 }}
               >
                 <div style={{ fontSize: 11, color: 'var(--accent-blue-title)', fontWeight: 700, marginBottom: 2 }}>
-                  오늘의 흐름
+                  {t('오늘의 흐름', "Today's Flow")}
                 </div>
                 <div style={{ fontSize: 12, color: 'var(--accent-blue-body)', lineHeight: 1.55 }}>
                   <b>{todayFortune.ss}({domain.primary})</b> 중심의 하루입니다. {domain.theme}이라,
@@ -776,18 +779,18 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
           })()}
           {todayFortune.categories.map((cat, idx) => {
             const tone =
-              cat.score >= 80 ? { text: '매우 유리', bg: '#2D7A1F', color: '#fff' } :
-              cat.score >= 65 ? { text: '유리', bg: 'var(--tone-positive-bg)', color: 'var(--tone-positive-fg)' } :
-              cat.score >= 45 ? { text: '무난', bg: 'var(--tone-neutral-bg)', color: 'var(--tone-neutral-fg)' } :
-              cat.score >= 30 ? { text: '주의', bg: 'var(--tone-caution-bg)', color: 'var(--tone-caution-fg)' } :
-                                { text: '강한 주의', bg: '#C33A1F', color: '#fff' };
+              cat.score >= 80 ? { text: t('매우 유리', 'Very Good'), bg: '#2D7A1F', color: '#fff' } :
+              cat.score >= 65 ? { text: t('유리', 'Good'), bg: 'var(--tone-positive-bg)', color: 'var(--tone-positive-fg)' } :
+              cat.score >= 45 ? { text: t('무난', 'Neutral'), bg: 'var(--tone-neutral-bg)', color: 'var(--tone-neutral-fg)' } :
+              cat.score >= 30 ? { text: t('주의', 'Caution'), bg: 'var(--tone-caution-bg)', color: 'var(--tone-caution-fg)' } :
+                                { text: t('강한 주의', 'Warning'), bg: '#C33A1F', color: '#fff' };
             return (
               <div
                 key={cat.label}
                 className={idx > 0 ? 'border-t border-gray-100 dark:border-gray-800 pt-4 mt-4' : ''}
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[14px] font-bold text-gray-900 dark:text-gray-100">{cat.label}</span>
+                  <span className="text-[14px] font-bold text-gray-900 dark:text-gray-100">{catLabel(cat.label)}</span>
                   <span
                     className="inline-block rounded-full"
                     style={{
@@ -826,10 +829,10 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
                                 : { bg: 'var(--tone-negative-bg)', color: 'var(--tone-negative-fg)', icon: '!' })
                             : { bg: 'var(--tone-neutral-bg)', color: 'var(--tone-neutral-fg)', icon: '·' };
                         const lbl = n.tone === 'positive'
-                          ? '오늘 플러스'
+                          ? t('오늘 플러스', 'Today Plus')
                           : n.tone === 'negative'
-                            ? (isMild ? '오늘 참고' : '오늘 주의')
-                            : '오늘';
+                            ? (isMild ? t('오늘 참고', 'Today Note') : t('오늘 주의', 'Today Caution'))
+                            : t('오늘', 'Today');
                         return (
                           <div
                             key={i}
@@ -855,9 +858,9 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
         </Section>
       )}
 
-      {/* 총운 — 오늘의 운세 다음 */}
-      {chongun && (
-        <Section title="총운">
+      {/* ── 이하 full 모드에서만 표시 ── */}
+      {mode === 'full' && chongun && (
+        <Section title={t('총운', 'Overall Fortune')}>
           {chongunText ? (
             <div>{renderMarkdown(chongunText)}</div>
           ) : (
@@ -884,38 +887,38 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
       )}
 
       {/* 상세 해석 — 총운 캐시가 있으면 숨김 (캐시에 포함됨) */}
-      {!chongunText && chongun?.detail && (
-        <Section title="상세 해석">
+      {mode === 'full' && !chongunText && chongun?.detail && (
+        <Section title={t('상세 해석', 'Detailed Interpretation')}>
           <p className="mb-3">{chongun.detail.summary}</p>
           <div className="mb-3">
-            <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">표현/행동 양식</div>
+            <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">{t('표현/행동 양식', 'Behavior Style')}</div>
             <p>{chongun.detail.behavior}</p>
           </div>
           <div className="mb-3">
-            <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">대인 관계</div>
+            <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">{t('대인 관계', 'Relationships')}</div>
             <p>{chongun.detail.social}</p>
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <div className="text-[12px] font-semibold text-green-600 mb-1">강점</div>
+              <div className="text-[12px] font-semibold text-green-600 mb-1">{t('강점', 'Strengths')}</div>
               <ul className="list-disc list-inside text-[12px] space-y-0.5">
                 {chongun.detail.strengths.map((s, i) => <li key={i}>{s}</li>)}
               </ul>
             </div>
             <div>
-              <div className="text-[12px] font-semibold text-red-400 mb-1">약점</div>
+              <div className="text-[12px] font-semibold text-red-400 mb-1">{t('약점', 'Weaknesses')}</div>
               <ul className="list-disc list-inside text-[12px] space-y-0.5">
                 {chongun.detail.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
               </ul>
             </div>
           </div>
           <div className="mb-3">
-            <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">개선 방안</div>
+            <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">{t('개선 방안', 'Improvement')}</div>
             <p>{chongun.detail.improvement}</p>
           </div>
           {chongun.detail.jobs.length > 0 && (
             <div className="mb-3">
-              <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">추천 직업</div>
+              <div className="text-[12px] font-semibold text-gray-700 dark:text-gray-300 mb-1">{t('추천 직업', 'Recommended Careers')}</div>
               <div className="space-y-1.5">
                 {chongun.detail.jobs.map((j, i) => (
                   <div key={i} className="text-[12px]"><strong>{j.field}</strong> — {j.role} <span className="text-gray-400 dark:text-gray-300">({j.reason})</span></div>
@@ -930,18 +933,18 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
       )}
 
       {/* 일지 상세 — 총운 캐시가 있으면 숨김 */}
-      {!chongunText && chongun?.iljiDetail && (
-        <Section title="일지(日支) 해석">
+      {mode === 'full' && !chongunText && chongun?.iljiDetail && (
+        <Section title={t('일지(日支) 해석', 'Day Branch Interpretation')}>
           <p className="mb-3">{chongun.iljiDetail.summary}</p>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <div className="text-[12px] font-semibold text-green-600 mb-1">강점</div>
+              <div className="text-[12px] font-semibold text-green-600 mb-1">{t('강점', 'Strengths')}</div>
               <ul className="list-disc list-inside text-[12px] space-y-0.5">
                 {chongun.iljiDetail.strengths.map((s, i) => <li key={i}>{s}</li>)}
               </ul>
             </div>
             <div>
-              <div className="text-[12px] font-semibold text-red-400 mb-1">약점</div>
+              <div className="text-[12px] font-semibold text-red-400 mb-1">{t('약점', 'Weaknesses')}</div>
               <ul className="list-disc list-inside text-[12px] space-y-0.5">
                 {chongun.iljiDetail.weaknesses.map((w, i) => <li key={i}>{w}</li>)}
               </ul>
@@ -952,12 +955,12 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
       )}
 
       {/* 대운 */}
-      {ilgan && daeuns.length > 0 && (
+      {mode === 'full' && ilgan && daeuns.length > 0 && (
         <UnCard
-          title="대운"
-          subtitle="10년 주기로 보는 큰 흐름"
+          title={t('대운', 'Major Cycle')}
+          subtitle={t('10년 주기로 보는 큰 흐름', '10-year major life cycles')}
           variant="daeun"
-          cols={daeuns.map(x => ({ ...x, label: `${x.age}세` }))}
+          cols={daeuns.map(x => ({ ...x, label: lang === 'en' ? `${x.age}` : `${x.age}세` }))}
           ilgan={ilgan}
           activeCheck={col => {
             const age = (col as unknown as DaeunEntry).age;
@@ -967,10 +970,10 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
       )}
 
       {/* 연운 */}
-      {ilgan && yeonuns.length > 0 && (
+      {mode === 'full' && ilgan && yeonuns.length > 0 && (
         <UnCard
-          title="세운"
-          subtitle="1년 단위로 바뀌는 그해의 흐름"
+          title={t('세운', 'Annual Cycle')}
+          subtitle={t('1년 단위로 바뀌는 그해의 흐름', 'Year-by-year flow')}
           variant="yeonun"
           cols={yeonuns.map(x => ({ ...x, label: `${x.year}` }))}
           ilgan={ilgan}
@@ -979,40 +982,40 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
       )}
 
       {/* 월운 */}
-      {ilgan && woluns.length > 0 && (
+      {mode === 'full' && ilgan && woluns.length > 0 && (
         <>
           <UnCard
-            title="월운"
-            subtitle="한 달 단위의 세부 흐름"
+            title={t('월운', 'Monthly Cycle')}
+            subtitle={t('한 달 단위의 세부 흐름', 'Month-by-month flow')}
             variant="wolun"
-            cols={woluns.map(x => ({ ...x, label: `${String(x.month).padStart(2, '0')}월` }))}
+            cols={woluns.map(x => ({ ...x, label: lang === 'en' ? `M${String(x.month).padStart(2, '0')}` : `${String(x.month).padStart(2, '0')}월` }))}
             ilgan={ilgan}
             yongsinOh={structure?.yongsin?.primary}
             activeCheck={col => (col as unknown as WolunEntry).month === wolunActiveMonth}
           />
           {structure?.yongsin && (
             <div className="-mt-3 mb-4 px-5 text-[11px] text-gray-500 dark:text-gray-100 dark:text-gray-300">
-              <span className="text-green-600 font-semibold">용신↑</span> 내 필요한 기운이 강해지는 달 ·
-              <span className="text-red-500 font-semibold ml-1">용신↓</span> 용신이 약해지는 달
-              (용신: <strong className={EL_COLORS[structure.yongsin.primary]}>{structure.yongsin.primary}</strong>)
+              <span className="text-green-600 font-semibold">{t('용신↑', 'Yongsin↑')}</span> {t('내 필요한 기운이 강해지는 달', 'Months where your needed element is strong')} ·
+              <span className="text-red-500 font-semibold ml-1">{t('용신↓', 'Yongsin↓')}</span> {t('용신이 약해지는 달', 'Months where it weakens')}
+              ({t('용신', 'Yongsin')}: <strong className={EL_COLORS[structure.yongsin.primary]}>{structure.yongsin.primary}</strong>)
             </div>
           )}
         </>
       )}
 
       {/* 일진 달력 */}
-      {ilgan && <DailyCalendar ilgan={ilgan} />}
+      {mode === 'full' && ilgan && <DailyCalendar ilgan={ilgan} />}
 
       {/* 사주 구조 진단 — V3 디자인 */}
-      {structure && (
+      {mode === 'full' && structure && (
         <CollapsibleSection
-          title="사주 구조 진단"
-          subtitle="오행 균형 · 신강/신약 · 격국 · 용신 · 관계"
+          title={t('사주 구조 진단', 'Chart Structure Analysis')}
+          subtitle={t('오행 균형 · 신강/신약 · 격국 · 용신 · 관계', 'Five Elements · Strength · Structure · Yongsin · Relations')}
           defaultOpen
         >
           {/* 오행 균형 — bar chart */}
           <div className="mb-6">
-            <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 mb-3">오행 균형</div>
+            <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 mb-3">{t('오행 균형', 'Five Elements Balance')}</div>
             {(() => {
               const oh = OHAENG_SETS.default;
               const entries = (['목', '화', '토', '금', '수'] as const).map(o => ({
@@ -1022,7 +1025,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
               const maxCount = Math.max(2, ...entries.map(e => e.n));
               const maxH = 70;
               const statusLabel = (n: number) =>
-                n === 0 ? '없음' : n === 1 ? '적음' : n === 2 ? '적정' : '많음';
+                n === 0 ? t('없음', 'None') : n === 1 ? t('적음', 'Low') : n === 2 ? t('적정', 'Balanced') : t('많음', 'High');
               return (
                 <div>
                   <div className="flex gap-2 items-end px-1" style={{ height: maxH + 18 }}>
@@ -1097,22 +1100,22 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     {
-                      name: '득령',
+                      name: t('득령', 'Season'),
                       ok: structure.singangyak.deukryeong,
-                      okNote: '월지가 일간을 도움',
-                      noNote: '절기가 일간에 돕지 않음',
+                      okNote: t('월지가 일간을 도움', 'Month branch supports Day Master'),
+                      noNote: t('절기가 일간에 돕지 않음', 'Season does not support Day Master'),
                     },
                     {
-                      name: '득지',
+                      name: t('득지', 'Root'),
                       ok: structure.singangyak.deukji,
-                      okNote: '일지가 일간의 뿌리',
-                      noNote: '일지가 일간을 돕지 않음',
+                      okNote: t('일지가 일간의 뿌리', 'Day branch roots the Day Master'),
+                      noNote: t('일지가 일간을 돕지 않음', 'Day branch does not support'),
                     },
                     {
-                      name: '득세',
+                      name: t('득세', 'Support'),
                       ok: structure.singangyak.deukse >= 3,
-                      okNote: `세력 ${structure.singangyak.deukse}/5 — 우호적`,
-                      noNote: `세력 ${structure.singangyak.deukse}/5 — 부족`,
+                      okNote: t(`세력 ${structure.singangyak.deukse}/5 — 우호적`, `Power ${structure.singangyak.deukse}/5 — Favorable`),
+                      noNote: t(`세력 ${structure.singangyak.deukse}/5 — 부족`, `Power ${structure.singangyak.deukse}/5 — Lacking`),
                     },
                   ].map((c, i) => (
                     <div
@@ -1168,7 +1171,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
                   marginBottom: 4,
                 }}
               >
-                격국 (格局)
+                {t('격국 (格局)', 'Structure (格局)')}
               </div>
               <div
                 style={{
@@ -1204,7 +1207,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
                       marginBottom: 10,
                     }}
                   >
-                    용신 (用神)
+                    {t('용신 (用神)', 'Yongsin (用神)')}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <div
@@ -1254,7 +1257,7 @@ export function FortuneResult({ data, mbtiGroup, onMbtiChange }: Props) {
           {/* 지지 관계 (합·충) */}
           {structure.hapChung.length > 0 && (
             <div>
-              <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 mb-3">지지 관계</div>
+              <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100 mb-3">{t('지지 관계', 'Branch Relations')}</div>
               <div className="space-y-3">
                 {structure.hapChung.map((hc, i) => {
                   const isChung = hc.type === '지지충';

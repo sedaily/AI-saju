@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { getGapja, CG_OH, JJ_OH, JJG, sipsung, unsung } from '../lib/engine';
 import { V3_TOKENS } from '../lib/ohaeng';
+import { useLang } from '@/shared/lib/LangContext';
 
 const EL_COLORS: Record<string, string> = {
   '목': 'text-green-600', '화': 'text-red-500', '토': 'text-yellow-600',
@@ -22,7 +23,8 @@ const US_MEANING: Record<string, string> = {
   '절': '단절·전환', '태': '잉태·준비', '양': '조용한 성장',
 };
 
-const DOWS = ['일', '월', '화', '수', '목', '금', '토'];
+const DOWS_KO = ['일', '월', '화', '수', '목', '금', '토'];
+const DOWS_EN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 interface Props { ilgan: string; }
 
@@ -35,6 +37,8 @@ interface DayInfo {
 }
 
 export function DailyCalendar({ ilgan }: Props) {
+  const { t, lang } = useLang();
+  const DOWS = lang === 'en' ? DOWS_EN : DOWS_KO;
   const now = new Date();
   const todayY = now.getFullYear();
   const todayM = now.getMonth() + 1;
@@ -86,8 +90,8 @@ export function DailyCalendar({ ilgan }: Props) {
       {/* 헤더: 타이틀 + 토글 pill */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
-          <div className="text-[14px] font-bold text-gray-900 dark:text-gray-100">일진 달력</div>
-          <div className="text-[11px] text-gray-400 dark:text-gray-300 mt-0.5">{viewY}년 {viewM}월</div>
+          <div className="text-[14px] font-bold text-gray-900 dark:text-gray-100">{t('일진 달력', 'Daily Pillar Calendar')}</div>
+          <div className="text-[11px] text-gray-400 dark:text-gray-300 mt-0.5">{lang === 'en' ? `${viewY}. ${viewM}` : `${viewY}년 ${viewM}월`}</div>
         </div>
         <div className="flex gap-1">
           <button
@@ -100,7 +104,7 @@ export function DailyCalendar({ ilgan }: Props) {
               color: mode === 'sipsung' ? 'var(--v3-panel)' : V3_TOKENS.ink,
             }}
           >
-            십성
+            {t('십성', 'God')}
           </button>
           <button
             type="button"
@@ -112,7 +116,7 @@ export function DailyCalendar({ ilgan }: Props) {
               color: mode === 'unseong' ? 'var(--v3-panel)' : V3_TOKENS.ink,
             }}
           >
-            운성
+            {t('운성', 'Stage')}
           </button>
         </div>
       </div>
@@ -124,15 +128,15 @@ export function DailyCalendar({ ilgan }: Props) {
           onClick={prevMonth}
           className="w-7 h-7 flex items-center justify-center rounded-lg border-none cursor-pointer"
           style={{ background: V3_TOKENS.panel, color: V3_TOKENS.sub, fontSize: 14 }}
-          aria-label="이전 달"
+          aria-label={t('이전 달', 'Previous month')}
         >‹</button>
-        <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100">{viewY}년 {viewM}월</div>
+        <div className="text-[13px] font-bold text-gray-900 dark:text-gray-100">{lang === 'en' ? `${viewY}. ${viewM}` : `${viewY}년 ${viewM}월`}</div>
         <button
           type="button"
           onClick={nextMonth}
           className="w-7 h-7 flex items-center justify-center rounded-lg border-none cursor-pointer"
           style={{ background: V3_TOKENS.panel, color: V3_TOKENS.sub, fontSize: 14 }}
-          aria-label="다음 달"
+          aria-label={t('다음 달', 'Next month')}
         >›</button>
       </div>
 
@@ -189,10 +193,12 @@ export function DailyCalendar({ ilgan }: Props) {
             <div className="flex items-start justify-between mb-3">
               <div>
                 <h4 className="text-[15px] font-bold text-gray-900 dark:text-gray-100">
-                  {viewY}년 {viewM}월 {selectedDay.day}일 ({DOWS[selectedDay.dow]})
+                  {lang === 'en'
+                    ? `${viewY}. ${viewM}. ${selectedDay.day} (${DOWS[selectedDay.dow]})`
+                    : `${viewY}년 ${viewM}월 ${selectedDay.day}일 (${DOWS[selectedDay.dow]})`}
                 </h4>
                 <p className="text-[12px] text-gray-500 dark:text-gray-300 mt-0.5">
-                  일진 <span className={`font-bold ${EL_COLORS[selectedDay.cgOh]}`}>{selectedDay.ganji}</span>
+                  {t('일진', 'Day Pillar')} <span className={`font-bold ${EL_COLORS[selectedDay.cgOh]}`}>{selectedDay.ganji}</span>
                   <span className="text-gray-400 dark:text-gray-300 ml-1.5">({selectedDay.ganjiHanja})</span>
                 </p>
               </div>
@@ -200,7 +206,7 @@ export function DailyCalendar({ ilgan }: Props) {
             </div>
             {selectedDay.ss && (
               <div className="mb-3">
-                <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-300 mb-0.5">십성</div>
+                <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-300 mb-0.5">{t('십성', 'Ten God')}</div>
                 <div className="text-[13px]">
                   <strong>{selectedDay.ss}</strong>
                   <span className="text-[11px] text-gray-400 dark:text-gray-300 ml-1.5">{SS_MEANING[selectedDay.ss] || ''}</span>
@@ -209,7 +215,7 @@ export function DailyCalendar({ ilgan }: Props) {
             )}
             {selectedDay.us && (
               <div className="mb-3">
-                <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-300 mb-0.5">12운성</div>
+                <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-300 mb-0.5">{t('12운성', '12 Stages')}</div>
                 <div className="text-[13px]">
                   <strong>{selectedDay.us}</strong>
                   <span className="text-[11px] text-gray-400 dark:text-gray-300 ml-1.5">{US_MEANING[selectedDay.us] || ''}</span>
@@ -219,7 +225,7 @@ export function DailyCalendar({ ilgan }: Props) {
             {selectedDay.ganjiHanja && JJG[selectedDay.ganjiHanja[1]] && (
               <div>
                 <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-300 mb-0.5">
-                  지지({selectedDay.ganjiHanja[1]}) 속 숨은 기운
+                  {t(`지지(${selectedDay.ganjiHanja[1]}) 속 숨은 기운`, `Hidden energies in branch (${selectedDay.ganjiHanja[1]})`)}
                 </div>
                 <div className="flex flex-wrap gap-1 text-[11px]">
                   {JJG[selectedDay.ganjiHanja[1]].map((h, i, arr) => {
