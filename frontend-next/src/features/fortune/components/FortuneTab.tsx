@@ -44,9 +44,10 @@ function setSaved(list: SavedEntry[]) { localStorage.setItem(STORAGE_KEY, JSON.s
 interface FortuneTabProps {
   selectedGroup?: 'NT' | 'NF' | 'ST' | 'SF';
   onMbtiChange?: (group: 'NT' | 'NF' | 'ST' | 'SF') => void;
+  mode?: 'full' | 'today';
 }
 
-export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}) {
+export function FortuneTab({ selectedGroup, onMbtiChange, mode = 'full' }: FortuneTabProps = {}) {
   const router = useRouter();
   const { t, g, lang, localePath } = useLang();
   const [birthdate, setBirthdate] = useState('');
@@ -168,6 +169,27 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
     }
   }, []);
 
+  // 마운트 시 localStorage에 저장된 사주 데이터가 있으면 자동 복원
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('saju_current');
+      if (!raw) return;
+      const saved = JSON.parse(raw);
+      if (saved.year && saved.month && saved.day) {
+        const g = saved.gender || '';
+        const ti = saved.timeInput || '';
+        const reg = saved.region || '';
+        setBirthdate(`${saved.year} / ${String(saved.month).padStart(2, '0')} / ${String(saved.day).padStart(2, '0')}`);
+        setGender(g as '남' | '여' | '');
+        if (ti) { setTimeInput(ti); setNoTime(false); }
+        else { setTimeInput(''); setNoTime(true); }
+        setRegion(reg);
+        doCalculate(saved.year, saved.month, saved.day, g, ti, !ti, reg);
+        setShowForm(false);
+      }
+    } catch {}
+  }, [doCalculate]);
+
   const handleCalculate = useCallback(() => {
     const parsed = parseDateStr(birthdate);
     if (!parsed) { setError(t('생년월일을 정확히 입력해주세요.', 'Please enter a valid birth date.')); return; }
@@ -202,7 +224,7 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
     <div className="-my-6 w-full bg-[#F8F9FA] dark:bg-gray-950" style={{ minHeight: 'calc(100vh + 48px)' }}>
       {/* 흰색 헤더 블록 — 전폭 */}
       <div className="bg-white dark:bg-gray-900 w-full">
-        <div className="max-w-[480px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
+        <div className="max-w-[480px] lg:max-w-[720px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
           {/* 배경 마스코트 — 우하단 살짝 크롭, 텍스트 뒤 */}
           <img
             src="/fortune-mascot.png"
@@ -230,19 +252,33 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
             </div>
           </div>
           {/* 타이틀 */}
-          <h2 className="text-[26px] font-extrabold text-gray-900 dark:text-gray-100 tracking-[-0.04em] leading-none mb-4">{t('오늘의 운세', "Today's Fortune")}</h2>
-          {/* 고전 기반 크레덴셜 — 왼쪽 정렬, 3줄 */}
+          <h2 className="text-[26px] font-extrabold text-gray-900 dark:text-gray-100 tracking-[-0.04em] leading-none mb-4">
+            {mode === 'today'
+              ? t('오늘의 사주', "Today's Saju")
+              : t('내 사주', 'My Saju')}
+          </h2>
+          {/* 크레덴셜 — 모드별 분기 */}
           <div className="text-[10.5px] sm:text-[11.5px] text-gray-500 dark:text-gray-300 leading-[1.55] mb-3">
-            <div>{t('궁통보감·삼명통회·자평진전 3대 고전 기반', 'Based on the 3 classical Saju texts (Gungtongbogam · Sammyeongtonghoe · Japyeongjinjeon)')}</div>
-            <div>{t('16종 신살 자동 탐지 · KASI 만세력 연동', '16 Sinsal auto-detection · KASI ephemeris integration')}</div>
-            <div className="text-gray-700 dark:text-gray-100 font-semibold">{t('고전 명리를 데이터로 구현했습니다.', 'Classical Myeongri, rebuilt as data.')}</div>
+            {mode === 'today' ? (
+              <>
+                <div>{t('오늘 일진과 내 사주의 상호작용을 분석합니다', "Analyzes today's energy interaction with your chart")}</div>
+                <div>{t('십성 · 12운성 · 분야별 운세 한눈에', 'Ten Gods · 12 Stages · Fortune by category at a glance')}</div>
+                <div className="text-gray-700 dark:text-gray-100 font-semibold">{t('매일 달라지는 나의 하루 흐름.', 'Your daily flow, refreshed every day.')}</div>
+              </>
+            ) : (
+              <>
+                <div>{t('궁통보감·삼명통회·자평진전 3대 고전 기반', 'Based on the 3 classical Saju texts (Gungtongbogam · Sammyeongtonghoe · Japyeongjinjeon)')}</div>
+                <div>{t('16종 신살 자동 탐지 · KASI 만세력 연동', '16 Sinsal auto-detection · KASI ephemeris integration')}</div>
+                <div className="text-gray-700 dark:text-gray-100 font-semibold">{t('고전 명리를 데이터로 구현했습니다.', 'Classical Myeongri, rebuilt as data.')}</div>
+              </>
+            )}
           </div>
 
           </div>
         </div>
       </div>
 
-      <div className="max-w-[480px] mx-auto">
+      <div className="max-w-[480px] lg:max-w-[720px] mx-auto">
       {/* 회색 콘텐츠 영역 */}
       <div className="px-3 sm:px-[14px] pt-[14px] pb-10">
       {/* 입력 폼 — 결과가 있으면 접힘 */}
@@ -399,7 +435,7 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
         }));
         return (
         <>
-          <FortuneResult data={result} mbtiGroup={mbtiGroup} onMbtiChange={setMbtiGroup} />
+          <FortuneResult data={result} mbtiGroup={mbtiGroup} onMbtiChange={setMbtiGroup} mode={mode} />
           <button
             onClick={() => {
               if (isAlreadySaved) return;
@@ -514,9 +550,10 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
       })()}
 
       {/* 저장된 만세력 ↔ 배너 사이 구분선 */}
-      <div className="mt-6 mb-5 border-t border-gray-200 dark:border-gray-800" />
+      {mode === 'full' && <div className="mt-6 mb-5 border-t border-gray-200 dark:border-gray-800" />}
 
-      {/* 재운 흐름 보기 배너 — 생년월일 입력 전에도 항상 노출 */}
+      {/* 재운 흐름 보기 배너 — full 모드에서만 노출 */}
+      {mode === 'full' && (<>
       <button
         type="button"
         onClick={() => {
@@ -711,6 +748,7 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
           </svg>
         </div>
       </button>
+      </>)}
       </div>
       </div>
     </div>

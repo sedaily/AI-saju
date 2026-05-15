@@ -4,14 +4,16 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { useLang } from '@/shared/lib/LangContext';
 
-type TabId = 'saju' | 'chaeun' | 'career' | 'compatibility' | 'couple' | 'news' | 'blog';
+type TabId = 'saju' | 'today' | 'chaeun' | 'career' | 'compatibility' | 'couple' | 'news' | 'blog' | 'zodiac';
 
 const TABS: { id: TabId; href: string; ko: string; en: string }[] = [
-  { id: 'saju',          href: '/saju',          ko: '사주',     en: 'Saju'    },
+  { id: 'saju',          href: '/saju',          ko: '내 사주',   en: 'My Saju' },
+  { id: 'today',         href: '/today',         ko: '오늘의 운세', en: "Today's Saju" },
   { id: 'chaeun',        href: '/chaeun',        ko: '재운',     en: 'Wealth'  },
   { id: 'career',        href: '/career',        ko: '커리어',   en: 'Career'  },
   { id: 'compatibility', href: '/compatibility', ko: '이상형',   en: 'Ideal'   },
   { id: 'couple',        href: '/couple',        ko: '커플 궁합', en: 'Couple'  },
+  { id: 'zodiac',        href: '/zodiac',        ko: '띠별 운세', en: 'Zodiac'  },
   // 뉴스 탭: 검색 API 회귀로 임시 숨김
   // { id: 'news',          href: '/news',          ko: '뉴스',     en: 'News'    },
   { id: 'blog',          href: '/blog',          ko: '블로그',   en: 'Blog'    },
@@ -20,11 +22,13 @@ const TABS: { id: TabId; href: string; ko: string; en: string }[] = [
 function resolveActive(pathname: string | null): TabId | null {
   if (!pathname) return null;
   const bare = pathname.startsWith('/en/') ? pathname.slice(3) : pathname === '/en' ? '/' : pathname;
+  if (bare.startsWith('/today')) return 'today';
   if (bare.startsWith('/chaeun')) return 'chaeun';
   if (bare.startsWith('/career')) return 'career';
   if (bare.startsWith('/compatibility')) return 'compatibility';
   if (bare.startsWith('/couple')) return 'couple';
   if (bare.startsWith('/saju')) return 'saju';
+  if (bare.startsWith('/zodiac')) return 'zodiac';
   if (bare.startsWith('/news')) return 'news';
   if (bare.startsWith('/blog')) return 'blog';
   return null;
@@ -40,7 +44,7 @@ export function FeatureTabs() {
       aria-label={t('기능 탭', 'Feature tabs')}
       className="sticky top-0 z-40 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800"
     >
-      <div className="max-w-[480px] mx-auto px-3 sm:px-[14px]">
+      <div className="max-w-[480px] lg:max-w-[720px] mx-auto px-3 sm:px-[14px]">
         <ul className="flex gap-2 overflow-x-auto py-2.5 scrollbar-hide">
           {TABS.map(tab => {
             const isActive = active === tab.id;
