@@ -78,7 +78,7 @@ const EL_BADGE_SOLID: Record<string, string> = {
 };
 
 export function IdealMatchSection({ pillars, gender, birthYear }: Props) {
-  const { t, lang } = useLang();
+  const { t, lang, localePath } = useLang();
   const [mode, setMode] = useState<MatchMode>('spouse');
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -452,7 +452,7 @@ export function IdealMatchSection({ pillars, gender, birthYear }: Props) {
 
       {/* === 커플 궁합 CTA 배너 === */}
       <a
-        href="/couple/"
+        href={localePath('/couple/')}
         onClick={() => trackEvent('ideal_match_to_couple', { primary_oh: primaryOh })}
         className="group block rounded-[18px] overflow-hidden mb-4 no-underline bg-gradient-to-br from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 transition-colors shadow-sm"
       >

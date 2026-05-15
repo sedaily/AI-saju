@@ -30,7 +30,7 @@ const LANDING_FAQ = [
 ];
 
 export default function LandingPage() {
-  const { t } = useLang();
+  const { t, localePath } = useLang();
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 antialiased">
@@ -69,13 +69,13 @@ export default function LandingPage() {
           <ScrollReveal delay={280}>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link
-                href="/saju"
+                href={localePath('/saju')}
                 className="inline-flex items-center justify-center h-11 px-5 rounded-full bg-slate-900 text-white text-[14px] font-semibold hover:bg-slate-800 transition-colors"
               >
                 {t('내 사주 보기', 'Read my chart')}
               </Link>
               <Link
-                href="/compatibility"
+                href={localePath('/compatibility')}
                 className="inline-flex items-center justify-center h-11 px-5 rounded-full bg-white text-slate-900 text-[14px] font-semibold border border-slate-300 hover:bg-slate-100 transition-colors"
               >
                 {t('궁합 추천 보기 →', 'See ideal match →')}
@@ -282,7 +282,7 @@ export default function LandingPage() {
           </ScrollReveal>
           <ScrollReveal delay={240}>
             <Link
-              href="/saju"
+              href={localePath('/saju')}
               className="inline-flex items-center justify-center h-12 px-6 rounded-full bg-slate-900 text-white text-[15px] font-semibold hover:bg-slate-800 transition-colors"
             >
               {t('지금 바로 시작하기 →', 'Start now →')}

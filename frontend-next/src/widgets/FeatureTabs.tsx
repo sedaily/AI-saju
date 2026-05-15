@@ -19,19 +19,20 @@ const TABS: { id: TabId; href: string; ko: string; en: string }[] = [
 
 function resolveActive(pathname: string | null): TabId | null {
   if (!pathname) return null;
-  if (pathname.startsWith('/chaeun')) return 'chaeun';
-  if (pathname.startsWith('/career')) return 'career';
-  if (pathname.startsWith('/compatibility')) return 'compatibility';
-  if (pathname.startsWith('/couple')) return 'couple';
-  if (pathname.startsWith('/saju')) return 'saju';
-  if (pathname.startsWith('/news')) return 'news';
-  if (pathname.startsWith('/blog')) return 'blog';
+  const bare = pathname.startsWith('/en/') ? pathname.slice(3) : pathname === '/en' ? '/' : pathname;
+  if (bare.startsWith('/chaeun')) return 'chaeun';
+  if (bare.startsWith('/career')) return 'career';
+  if (bare.startsWith('/compatibility')) return 'compatibility';
+  if (bare.startsWith('/couple')) return 'couple';
+  if (bare.startsWith('/saju')) return 'saju';
+  if (bare.startsWith('/news')) return 'news';
+  if (bare.startsWith('/blog')) return 'blog';
   return null;
 }
 
 export function FeatureTabs() {
   const pathname = usePathname();
-  const { t } = useLang();
+  const { t, localePath } = useLang();
   const active = resolveActive(pathname);
 
   return (
@@ -46,7 +47,7 @@ export function FeatureTabs() {
             return (
               <li key={tab.id} className="shrink-0">
                 <Link
-                  href={tab.href}
+                  href={localePath(tab.href)}
                   aria-current={isActive ? 'page' : undefined}
                   className={[
                     'inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[13px] font-semibold transition-colors border',

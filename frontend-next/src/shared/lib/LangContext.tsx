@@ -1,6 +1,7 @@
 'use client';
 
-import { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   EARTHLY_BRANCHES,
   EVALUATION_TONES,
@@ -20,13 +21,32 @@ import {
 
 export type Lang = 'ko' | 'en';
 
-const STORAGE_KEY = 'lang';
-
 interface LangContextValue {
   lang: Lang;
   setLang: (next: Lang) => void;
   t: (ko: string, en: string) => string;
   g: (term: string) => string;
+  /** Localize a path: '/saju' → '/en/saju' when lang === 'en' */
+  localePath: (path: string) => string;
+}
+
+function deriveLang(pathname: string | null): Lang {
+  if (!pathname) return 'ko';
+  if (pathname === '/en' || pathname.startsWith('/en/')) return 'en';
+  return 'ko';
+}
+
+function stripLocale(pathname: string): string {
+  if (pathname === '/en') return '/';
+  if (pathname.startsWith('/en/')) return pathname.slice(3) || '/';
+  return pathname;
+}
+
+function withLocale(pathname: string, lang: Lang): string {
+  const bare = stripLocale(pathname);
+  if (lang === 'ko') return bare;
+  if (bare === '/') return '/en';
+  return `/en${bare}`;
 }
 
 const LangContext = createContext<LangContextValue | null>(null);
@@ -47,29 +67,22 @@ const GLOSSARY: Record<string, GlossaryEntry> = {
   ...INPUT_LABELS,
 };
 
-function getSavedLang(): Lang | null {
-  try {
-    const v = localStorage.getItem(STORAGE_KEY);
-    return v === 'ko' || v === 'en' ? v : null;
-  } catch {
-    return null;
-  }
-}
-
 export function LangProvider({ children }: { children: React.ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('ko');
+  const pathname = usePathname();
+  const router = useRouter();
+  const lang = useMemo<Lang>(() => deriveLang(pathname), [pathname]);
 
   useEffect(() => {
-    const initial = getSavedLang() ?? 'ko';
-    setLangState(initial);
-    document.documentElement.lang = initial;
-  }, []);
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
+  }, [lang]);
 
   const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    document.documentElement.lang = next;
-    try { localStorage.setItem(STORAGE_KEY, next); } catch {}
-  }, []);
+    if (next === lang) return;
+    const target = withLocale(pathname || '/', next);
+    router.push(target);
+  }, [lang, pathname, router]);
 
   const t = useCallback((ko: string, en: string) => (lang === 'en' ? en : ko), [lang]);
 
@@ -79,8 +92,10 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     return entry?.en ?? term;
   }, [lang]);
 
+  const localePath = useCallback((path: string) => withLocale(path, lang), [lang]);
+
   return (
-    <LangContext.Provider value={{ lang, setLang, t, g }}>
+    <LangContext.Provider value={{ lang, setLang, t, g, localePath }}>
       {children}
     </LangContext.Provider>
   );
@@ -94,6 +109,7 @@ export function useLang(): LangContextValue {
       setLang: () => {},
       t: (ko) => ko,
       g: (term) => term,
+      localePath: (path) => path,
     };
   }
   return ctx;

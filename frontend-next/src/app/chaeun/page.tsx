@@ -106,7 +106,7 @@ const TYPE_COLORS: Record<string, { bg: string; color: string; solid: string }> 
 };
 
 export default function ChaeunPage() {
-  const { t, lang } = useLang();
+  const { t, lang, localePath } = useLang();
   const [saju, setSaju] = useState<CurrentSaju | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
@@ -1375,7 +1375,7 @@ export default function ChaeunPage() {
         <button
           type="button"
           onClick={() => {
-            if (isSajuHost) { window.location.href = '/'; }
+            if (isSajuHost) { window.location.href = localePath('/'); }
             else { goToMain('fortune'); }
           }}
           className="w-full mt-3 py-3 text-[13px] font-semibold transition-colors flex items-center justify-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 cursor-pointer border-none bg-transparent"

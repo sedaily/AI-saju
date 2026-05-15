@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Spinner } from '@/shared/ui/Spinner';
+import { useLang } from '@/shared/lib/LangContext';
 
 /**
  * 비밀번호 게이트는 단순 접근 차단용일 뿐 진짜 인증이 아닙니다.
@@ -131,6 +132,7 @@ function excerptFromHtml(html: string): string {
 type Mode = 'list' | 'edit';
 
 export default function BlogAdminPage() {
+  const { localePath } = useLang();
   const [unlocked, setUnlocked] = useState(false);
   const [pwInput, setPwInput] = useState('');
   const [pwError, setPwError] = useState('');
@@ -244,7 +246,7 @@ export default function BlogAdminPage() {
             )}
           </div>
           <div className="flex items-center gap-2">
-            <a href="/blog" className="text-[12px] text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 no-underline">
+            <a href={localePath('/blog')} className="text-[12px] text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 no-underline">
               /blog 보기
             </a>
             <button

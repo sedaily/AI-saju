@@ -48,7 +48,7 @@ interface FortuneTabProps {
 
 export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}) {
   const router = useRouter();
-  const { t, g, lang } = useLang();
+  const { t, g, lang, localePath } = useLang();
   const [birthdate, setBirthdate] = useState('');
   const [timeInput, setTimeInput] = useState('');
   const [noTime, setNoTime] = useState(false);
@@ -525,7 +525,7 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
           if (!result) {
             try { localStorage.removeItem('saju_current'); } catch {}
           }
-          router.push('/chaeun');
+          router.push(localePath('/chaeun'));
         }}
         className="w-full rounded-[16px] relative overflow-hidden cursor-pointer border-none text-left"
         style={{
@@ -590,7 +590,7 @@ export function FortuneTab({ selectedGroup, onMbtiChange }: FortuneTabProps = {}
           if (!result) {
             try { localStorage.removeItem('saju_current'); } catch {}
           }
-          router.push('/career');
+          router.push(localePath('/career'));
         }}
         className="w-full rounded-[16px] mt-3 relative overflow-hidden cursor-pointer border-none text-left"
         style={{
