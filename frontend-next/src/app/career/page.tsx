@@ -504,7 +504,7 @@ export default function CareerPage() {
 
       {/* 헤더 — /saju 와 동일한 구조 */}
       <div className="bg-white dark:bg-gray-900 w-full">
-        <div className="max-w-[480px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
+        <div className="max-w-[480px] lg:max-w-[720px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
           <img
             src="/fortune-mascot.png"
             alt=""
@@ -540,7 +540,7 @@ export default function CareerPage() {
         </div>
       </div>
 
-      <div className="max-w-[480px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
+      <div className="max-w-[480px] lg:max-w-[720px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
         {!saju && (
           <>
             <p className="mb-4 text-center text-[13px] text-gray-500 dark:text-gray-100 dark:text-gray-300 leading-relaxed">

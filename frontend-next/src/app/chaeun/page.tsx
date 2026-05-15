@@ -187,7 +187,7 @@ export default function ChaeunPage() {
 
       {/* 헤더 — /saju 와 동일한 구조: 날짜·토글 → 타이틀 → 3줄 크레덴셜 */}
       <div className="bg-white dark:bg-gray-900 w-full">
-        <div className="max-w-[480px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
+        <div className="max-w-[480px] lg:max-w-[720px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
           <img
             src="/fortune-mascot.png"
             alt=""
@@ -226,7 +226,7 @@ export default function ChaeunPage() {
         </div>
       </div>
 
-      <div className="max-w-[480px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
+      <div className="max-w-[480px] lg:max-w-[720px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
         {/* saju 없으면: 안내 + 입력 폼 + 저장 목록 */}
         {!saju && (
           <>
