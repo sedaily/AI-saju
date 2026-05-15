@@ -85,7 +85,7 @@ export default function CouplePage() {
 
       {/* 헤더 */}
       <div className="bg-white dark:bg-gray-900 w-full">
-        <div className="max-w-[480px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
+        <div className="max-w-[480px] lg:max-w-[720px] mx-auto relative overflow-hidden" style={{ padding: '20px 20px 18px' }}>
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-1">
               <div className="text-[13px] text-gray-500 dark:text-gray-300 font-medium tracking-tight">
@@ -124,7 +124,7 @@ export default function CouplePage() {
         </div>
       </div>
 
-      <div className="max-w-[480px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
+      <div className="max-w-[480px] lg:max-w-[720px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
         {step === 'me' && (
           <>
             <p className="mb-3 text-center text-[13px] text-gray-500 dark:text-gray-300 leading-relaxed">

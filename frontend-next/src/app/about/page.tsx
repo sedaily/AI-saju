@@ -18,7 +18,7 @@ export default function AboutRedirect() {
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-900 flex items-center justify-center px-6">
-      <div className="max-w-[480px] text-center">
+      <div className="max-w-[480px] lg:max-w-[720px] text-center">
         <p className="text-[13px] font-semibold tracking-[0.12em] text-slate-500 uppercase mb-3">
           Moved
         </p>

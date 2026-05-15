@@ -70,7 +70,7 @@ export default function NewsPage() {
     <div className="min-h-screen bg-[#F8F9FA] dark:bg-gray-950">
       {!isSajuHost && <TopNav activeId="fortune" />}
       <FeatureTabs />
-      <div className="max-w-[480px] mx-auto px-4 pt-6 pb-10">
+      <div className="max-w-[480px] lg:max-w-[720px] mx-auto px-4 pt-6 pb-10">
         <div className="flex items-center justify-end gap-2 mb-4">
           <LangToggle />
           <ThemeToggle />

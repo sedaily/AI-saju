@@ -302,7 +302,7 @@ export default function BlogPage() {
       {/* 헤더 */}
       <div className="bg-white dark:bg-gray-900 w-full">
         <div
-          className="max-w-[480px] mx-auto relative overflow-hidden"
+          className="max-w-[480px] lg:max-w-[720px] mx-auto relative overflow-hidden"
           style={{ padding: '20px 20px 18px' }}
         >
           <img
@@ -335,7 +335,7 @@ export default function BlogPage() {
         </div>
       </div>
 
-      <div className="max-w-[480px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
+      <div className="max-w-[480px] lg:max-w-[720px] mx-auto px-3 sm:px-[14px] pt-4 pb-10">
         {slug ? (
           <article className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 sm:p-5">
             <button
